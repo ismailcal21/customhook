@@ -1,23 +1,43 @@
-import logo from './logo.svg';
-import './App.css';
+import React, { useEffect, useState }  from "react";
+import axios from "axios";
 
 function App() {
+  const [books, setBooks] = useState(null)
+  console.log(books)
+
+  useEffect(() => {
+    axios.get("https://jsonplaceholder.typicode.com/comments")
+      .then(res => {
+        setTimeout(() => {
+          console.log("res", res.data)
+        setBooks(res.data)
+        }, 1000);
+        
+      })
+      .catch(err => {
+        console.log("err",err)
+
+    })
+  },[])
+
+  if (books === null) {
+    return (
+      <div>
+        Loading
+      </div>
+    )
+  }
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {
+        books.map((item, index) => (
+          <div key={index} style={{display:"grid" ,gridTemplateColumns:"33% 33% 33%"}}>
+            {item.name}
+            <br />
+            {item.id}
+          </div>
+        ))
+      }
     </div>
   );
 }
